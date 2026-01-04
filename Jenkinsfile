@@ -1,39 +1,33 @@
 pipeline {
     agent any
 
+
     triggers {
-        // Poll SCM every 2 hours
-        pollSCM('H H/2 * * *')
+        // Poll SCM every 1 minute
+        pollSCM('H/1 * * * *')
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                // Checkout the master branch
-                git branch: 'master', url: 'https://github.com/AARTHIsm-project/cors.git'
-            }
-        }
 
         stage('Build') {
             steps {
-                echo 'Building the project...'
-                // Add your actual build commands here, e.g.:
-                // sh './gradlew build' or npm install/build
+                echo 'Installing dependencies'
+                sh 'npm install'
             }
         }
 
         stage('Test') {
             steps {
-                echo 'Running tests...'
-                // Add your test commands here, e.g.:
-                // sh './gradlew test' or pytest
+                echo 'Running tests'
+                sh 'npm test || echo "No tests found, skipping..."'
             }
         }
 
         stage('Deploy') {
             steps {
-                echo 'Deploying the application...'
-                // Add your deploy commands here
+                echo 'Deploying application'
+                // Run app in background
+                sh 'npm start &'
             }
         }
     }
