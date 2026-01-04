@@ -1,13 +1,28 @@
 pipeline {
     agent any
 
+    environment {
+        PORT = '3000'  // set the port here
+    }
+
     triggers {
-        // Poll SCM every 2 minutes
-        pollSCM('H/2 * * * *')
+        pollSCM('H/2 * * * *') // Poll every 2 minutes
     }
 
     stages {
-
+        stage('Verify README.md') {
+            steps {
+                echo ' Checking if README.md exists...'
+                bat '''
+                    if exist README.md (
+                        echo  README.md found.
+                    ) else (
+                        echo  README.md not found.
+                        exit /b 1
+                    )
+                '''
+            }
+        }
         stage('Build') {
             steps {
                 echo 'Installing dependencies'
@@ -24,9 +39,9 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                echo 'Deploying application'
-                // For Windows, start app in background using start cmd
-                bat 'start /B npm start'
+                echo "Deploying application on port ${PORT}"
+                // Windows: run Node app in background
+                bat "start /B npm start -- --port ${PORT}"
                 echo "Server running at http://localhost:${PORT}"
             }
         }
