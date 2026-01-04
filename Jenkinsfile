@@ -1,7 +1,6 @@
 pipeline {
     agent any
 
-
     triggers {
         // Poll SCM every 1 minute
         pollSCM('H/1 * * * *')
@@ -12,22 +11,22 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Installing dependencies'
-                sh 'npm install'
+                bat 'npm install'
             }
         }
 
         stage('Test') {
             steps {
                 echo 'Running tests'
-                sh 'npm test || echo "No tests found, skipping..."'
+                bat 'npm test || echo No tests found, skipping...'
             }
         }
 
         stage('Deploy') {
             steps {
                 echo 'Deploying application'
-                // Run app in background
-                sh 'npm start &'
+                // For Windows, start app in background using start cmd
+                bat 'start /B npm start'
             }
         }
     }
