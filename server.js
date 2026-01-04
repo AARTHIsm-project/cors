@@ -39,8 +39,8 @@ app.delete('/users/:index', (req, res) => {
     res.json({ message: 'User deleted successfully!', users });
 });
 
-// Fallback to index.html
-app.get('*', (req, res) => {
+// Fallback to index.html (fixed)
+app.get('/*', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/index.html'));
 });
 
