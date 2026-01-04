@@ -27,6 +27,7 @@ pipeline {
                 echo 'Deploying application'
                 // For Windows, start app in background using start cmd
                 bat 'start /B npm start'
+                echo "Server running at http://localhost:${PORT}"
             }
         }
     }
